@@ -33,20 +33,26 @@ router.route('/').get((req, res) => {
 
 //Delete task
 router.route('/:id').delete((req, res) => {
-    const idToUpdate = parseInt(req.params.id.slice(1));
-    // const idToUpdate = parseInt(req.params.id);
+    const idToUpdate = req.params.id.slice(1);
     taskArray.splice(idToUpdate, 1);
-    console.log(idToUpdate);
     res.send({
         'success': true,
         'message': "Task deleted",
         'data': taskArray
     });
-
 })
 
 //Update task
 router.route('/:id').put((req, res) => {
-    const idToUpdate = req.params.id;
+    const idToUpdate = req.params.id.slice(1);
+    taskArray[idToUpdate] = req.body.taskToUpdate;
+    res.send({
+        'success': true,
+        'message': "Task updated",
+        'data': taskArray
+    });
+
+
+
 
 })
