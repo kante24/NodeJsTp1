@@ -1,7 +1,7 @@
 let categoryArray = ["Iphone", "Samsung", "BlackBerry", "Sony"];
 
 //@desc    crée une categorie
-//@route   POST/category
+//@route   POST /category
 //@access  Public
 exports.createCategory = ((req, res) => {
     const category = req.body.categoryToAdd;
@@ -19,8 +19,8 @@ exports.createCategory = ((req, res) => {
 });
 
 
-//@desc     retourne une categorie
-//@route    GET/category
+//@desc     retourne toutes les categories
+//@route    GET /category
 //@access   Public
 exports.getCategory = ((req, res) => {
     res.status(201).send({
@@ -31,12 +31,12 @@ exports.getCategory = ((req, res) => {
 
 
 //@desc     supprime une categorie
-//@route    DELETE/category
+//@route    DELETE /category/id
 //@access   Public
 exports.deleteCategory = ((req, res) => {
-    const idToDelete = req.params.id.slice(1);
+    const idToDelete = req.params.id;
     categoryArray.splice(idToDelete, 1);
-    res.send({
+    res.status(201).send({
         'success': true,
         'message': "Category deleted",
         'data': categoryArray
@@ -45,14 +45,15 @@ exports.deleteCategory = ((req, res) => {
 
 
 //@desc     MODIFIE une categorie
-//@route    PUT/category
+//@route    PUT /category/id
 //@access   Public
 exports.updateCategory = ((req, res) => {
-    const idToUpdate = req.params.id.slice(1);
+    const idToUpdate = req.params.id;
     categoryArray[idToUpdate] = req.body.categoryToUpdate;
-    res.send({
+    res.status(200).send({
         'success': true,
-        'message': "Task updated",
+        'message': "Category updated",
+        'Category list lastUpdate': Date.now(),
         'data': categoryArray
     });
 });

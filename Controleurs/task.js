@@ -1,4 +1,6 @@
 let taskArray = ["1", "2", "3", "4"];
+
+
 //@desc    crée une tâche
 //@route   POST/task
 //@access  Public
@@ -24,7 +26,7 @@ exports.createTask = ((req, res) => {
 exports.getTask = ((req, res) => {
     res.status(201).send({
         'success': true,
-        'data': []
+        'data': taskArray
     });
 });
 
@@ -33,9 +35,10 @@ exports.getTask = ((req, res) => {
 //@route    DELETE/task
 //@access   Public
 exports.deleteTask = ((req, res) => {
-    const idToUpdate = req.params.id.slice(1);
+    const idToUpdate = req.params.id;
+    console.log(idToUpdate);
     taskArray.splice(idToUpdate, 1);
-    res.send({
+    res.status(200).send({
         'success': true,
         'message': "Task deleted",
         'data': taskArray
@@ -49,9 +52,10 @@ exports.deleteTask = ((req, res) => {
 exports.updateTask = ((req, res) => {
     const idToUpdate = req.params.id.slice(1);
     taskArray[idToUpdate] = req.body.taskToUpdate;
-    res.send({
+    res.status(200).send({
         'success': true,
         'message': "Task updated",
+        'Task lastUpdate': Date.now(),
         'data': taskArray
     });
 });
