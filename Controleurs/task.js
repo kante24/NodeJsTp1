@@ -1,32 +1,32 @@
-let taskArray = ["1", "2", "3", "4"];
+const { find, findById, create } = require("../models/task");
+const Task = require("../models/task");
 
 
-//@desc    crée une tâche
-//@route   POST/task
-//@access  Public
-exports.createTask = ((req, res) => {
-    const task = req.body.taskToAdd;
-    taskArray.push({
-        '_id': taskArray.length + 1,
-        'task': task,
-        'createAt': Date.now(),
-        'lastUpdate': Date.now(),
-    })
+//@desc     crée une tâche
+//@route    POST/task
+//@access   Public
+exports.createTask = (async(req, res) => {
+    //La tâche à ajouter dépuis le body parser
+    const taskToAdd = req.body.taskToAdd;
+    //La tâche qui vient d'être ajoutée
+    const taskAdded = await Task.create({ task: taskToAdd });
+    //Response to the client
     res.status(200).send({
         'success': true,
         'message': "Task created",
-        'data': taskArray
+        'data': taskAdded
     });
 });
 
 
-//@desc     retourne une tâche
+//@desc     retourne toutes les tâches
 //@route    GET/task
 //@access   Public
-exports.getTask = ((req, res) => {
+exports.getTask = (async(req, res) => {
+    const tasks = await Task.find();
     res.status(201).send({
         'success': true,
-        'data': taskArray
+        'data': tasks
     });
 });
 
@@ -34,14 +34,19 @@ exports.getTask = ((req, res) => {
 //@desc     supprime une tâche
 //@route    DELETE/task
 //@access   Public
-exports.deleteTask = ((req, res) => {
-    const idToUpdate = req.params.id;
-    console.log(idToUpdate);
-    taskArray.splice(idToUpdate, 1);
+exports.deleteTask = (async(req, res) => {
+    const idToDelete = req.params.id;
+    try {
+        await Task.findByIdAndUpdate(idToDelete, {
+            lastUpdate: Date.now(),
+            isAlive: false
+        })
+    } catch (error) {
+        console.log('Err findByIdAndUpdate ' + error)
+    }
     res.status(200).send({
         'success': true,
-        'message': "Task deleted",
-        'data': taskArray
+        'message': "Task deleted"
     });
 });
 
@@ -49,13 +54,30 @@ exports.deleteTask = ((req, res) => {
 //@desc     MODIFIE une tâche
 //@route    PUT/task
 //@access   Public
-exports.updateTask = ((req, res) => {
-    const idToUpdate = req.params.id.slice(1);
-    taskArray[idToUpdate] = req.body.taskToUpdate;
+//methode await
+exports.updateTask = (async(req, res) => {
+    const idToUpdate = req.params.id;
+    taskToUpdate = req.body.taskToUpdate;
+    let task;
+    try {
+        await Task.findByIdAndUpdate(idToUpdate, {
+            task: taskToUpdate,
+            lastUpdate: Date.now()
+        })
+    } catch (error) {
+        console.log('Err findByIdAndUpdate ' + error)
+    }
+    try {
+        //Pour afficher element après modification
+        task = await Task.findById(idToUpdate)
+    } catch (error) {
+        console.log('Err  findById' + error)
+    }
+
     res.status(200).send({
         'success': true,
         'message': "Task updated",
         'Task lastUpdate': Date.now(),
-        'data': taskArray
+        'data': task
     });
 });
