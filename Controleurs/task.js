@@ -10,7 +10,7 @@ exports.createTask = (async(req, res) => {
     const taskToAdd = req.body.taskToAdd;
     //La tâche qui vient d'être ajoutée
     const taskAdded = await Task.create({ task: taskToAdd });
-    //Response to the client
+    //Repondre au client
     res.status(200).send({
         'success': true,
         'message': "Task created",
@@ -35,8 +35,10 @@ exports.getTask = (async(req, res) => {
 //@route    DELETE/task
 //@access   Public
 exports.deleteTask = (async(req, res) => {
+    //id de la tâche à supprimer dépuis le lien
     const idToDelete = req.params.id;
     try {
+        //Suppression de la tâche
         await Task.findByIdAndUpdate(idToDelete, {
             lastUpdate: Date.now(),
             isAlive: false
@@ -54,12 +56,14 @@ exports.deleteTask = (async(req, res) => {
 //@desc     MODIFIE une tâche
 //@route    PUT/task
 //@access   Public
-//methode await
 exports.updateTask = (async(req, res) => {
+    //id de la tâche à modifier dépuis le lien
     const idToUpdate = req.params.id;
+    //Modification à apporter dépuis le body parser
     taskToUpdate = req.body.taskToUpdate;
     let task;
     try {
+        //Modification de la tâche
         await Task.findByIdAndUpdate(idToUpdate, {
             task: taskToUpdate,
             lastUpdate: Date.now()

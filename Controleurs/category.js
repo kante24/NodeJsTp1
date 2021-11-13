@@ -5,11 +5,11 @@ const Category = require("../models/category");
 //@route   POST /category
 //@access  Public
 exports.createCategory = (async(req, res) => {
-    //La tâche à ajouter dépuis le body parser
+    //La categorie à ajouter dépuis le body parser
     const categoryToAdd = req.body.categoryToAdd;
-    //La tâche qui vient d'être ajoutée
+    //La categorie qui vient d'être ajoutée
     const categoryAdded = await Category.create({ category: categoryToAdd });
-    //Response to the client
+    //Reponse au client
     res.status(200).send({
         'success': true,
         'message': "Task created",
@@ -34,8 +34,10 @@ exports.getCategory = (async(req, res) => {
 //@route    DELETE /category/id
 //@access   Public
 exports.deleteCategory = (async(req, res) => {
+    //id de la categorie à supprimer dépuis le lien
     const idToDelete = req.params.id;
     try {
+        //Suppression de la categorie
         await Category.findByIdAndUpdate(idToDelete, {
             lastUpdate: Date.now(),
             isAlive: false
@@ -54,10 +56,13 @@ exports.deleteCategory = (async(req, res) => {
 //@route    PUT /category/id
 //@access   Public
 exports.updateCategory = (async(req, res) => {
+    //id de la categorie à supprimer dépuis le lien
     const idToUpdate = req.params.id;
+    //Modification à apporter dépuis le body parser
     categoryToUpdate = req.body.categoryToUpdate;
     let category;
     try {
+        //Modification de la categorie
         await Category.findByIdAndUpdate(idToUpdate, {
             category: categoryToUpdate,
             lastUpdate: Date.now()
